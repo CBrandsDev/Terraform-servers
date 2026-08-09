@@ -1,0 +1,41 @@
+---
+- name: Instalar e configurar o Coolify localmente
+  hosts: localhost
+  connection: local
+  become: yes
+
+  tasks:
+
+    - name: Atualizar o cache do apt
+      ansible.builtin.apt:
+        update_cache: yes
+
+    - name: Instalar dependências essenciais
+      ansible.builtin.apt:
+        name:
+          - curl
+          - wget
+          - git
+          - sudo
+        state: present
+    - name: Configurar IP estático no Debian
+      ansible.builtin.blockinfile:
+        path: /etc/network/interfaces
+        block: |
+          auto enp0s3
+          iface enp0s3 inet static
+              address 192.168.1.210
+              netmask 255.255.255.0
+              gateway 192.168.1.1
+              dns-nameservers 8.8.8.8 8.8.4.4
+
+    - name: Reiniciar serviço de rede
+      ansible.builtin.systemd:
+        name: networking
+        state: restarted
+
+    - name: Baixar e executar o script de instalação do Coolify
+      ansible.builtin.shell: |
+        curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
+      args:
+        creates: /data/coolify
