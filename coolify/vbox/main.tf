@@ -42,3 +42,7 @@ resource "null_resource" "ansible_provisioner" {
     ]
   }
 }
+output "vm_ip_address" {
+  description = "The IP address of the VirtualBox VM"
+  value       = virtualbox_vm.coolify_node.network_adapter[0].ipv4_address
+}

@@ -1,0 +1,23 @@
+---
+- name: Instalar e configurar o Coolify Localmente
+  hosts: localhost
+  connection: local
+  become: yes
+  tasks:
+    - name: Atualizar o cache do apt
+      apt:
+        update_cache: yes
+
+    - name: Instalar dependências essenciais
+      apt:
+        name:
+          - curl
+          - wget
+          - git
+          - sudo
+        state: present
+
+    - name: Baixar e executar o script de instalação do Coolify
+      shell: "curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash"
+      args:
+        creates: "/data/coolify"
