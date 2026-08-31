@@ -11,11 +11,11 @@ resource "virtualbox_vm" "coolify_node" {
   name   = "coolify-debian"
   image  = "./debian-12.box"
   cpus   = 2
-  memory = "4096 mib"
+  memory = "4096 mib" # memoria RAM
   
   network_adapter {
     type           = "bridged"
-    host_interface = "Realtek Gaming 2.5GbE Family Controller"
+    host_interface = "Seu adaptador de rede" # Substitua pelo nome do seu adaptador de rede
   }
 }
 
@@ -25,13 +25,13 @@ resource "null_resource" "ansible_provisioner" {
   connection {
     type     = "ssh"
     host     = virtualbox_vm.coolify_node.network_adapter[0].ipv4_address
-    user     = "vagrant"
-    password = "vagrant"
+    user     = "user"
+    password = "SenhaSegura"
   }
 
   provisioner "file" {
     source      = "playbook.yml"
-    destination = "/home/vagrant/playbook.yml"
+    destination = "/home/user/playbook.yml"
   }
 
   provisioner "remote-exec" {
@@ -43,6 +43,6 @@ resource "null_resource" "ansible_provisioner" {
   }
 }
 output "vm_ip_address" {
-  description = "The IP address of the VirtualBox VM"
+  description = "Sua maquina virtual está rodando em: "
   value       = virtualbox_vm.coolify_node.network_adapter[0].ipv4_address
 }
