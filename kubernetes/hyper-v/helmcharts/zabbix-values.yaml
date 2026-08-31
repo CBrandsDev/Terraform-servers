@@ -1,0 +1,45 @@
+# Configurações do Zabbix Server
+zabbixServer:
+  image:
+    repository: zabbix/zabbix-server-pgsql
+    tag: ubuntu-7.0-latest
+  env:
+    - name: ZBX_SERVER_NAME
+      value: "Zabbix-K8s"
+  nodeSelector:
+      app: webserver
+
+# Configuração do Zabbix Webservice
+zabbixWebService:
+  nodeSelector:
+    app: webserver
+
+# Configurações do Zabbix Web (Interface Gráfica)
+zabbixWeb:
+  image:
+    repository: zabbix/zabbix-web-nginx-pgsql
+    tag: ubuntu-7.0-latest
+  env:
+   - name: ZBX_SERVER_HOST
+     value: "zabbix-release-zabbix-server"
+  service:
+    type: NodePort
+    port: 80
+    nodePort: 30080
+  nodeSelector:
+    app: webserver
+
+# Configurações do Banco de Dados (PostgreSQL)
+postgresql:
+  enabled: true
+  auth:
+    postgresPassword: "SenhaSegura"
+    username: "Admin"
+    password: "SenhaSegura"
+    database: "zabbix"
+  primary:
+    persistence:
+      enabled: true
+      size: 20Gi
+  nodeselector:
+    app: database

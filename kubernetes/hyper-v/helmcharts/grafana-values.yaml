@@ -1,0 +1,16 @@
+adminPassword: "grafana_admin"
+
+service:
+  type: NodePort
+  port: 80
+  nodePort: 30081
+nodeSelector:
+  app: webserver
+
+# Instala o plugin de integração do Zabbix automaticamente
+plugins:
+  - alexanderzobnin-zabbix-app
+
+persistence:
+  enabled: true
+  size: 10Gi
