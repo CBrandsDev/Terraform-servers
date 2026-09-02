@@ -1,0 +1,30 @@
+# Configurações da Aplicação GLPI
+service:
+  type: NodePort
+  port: 80
+  nodePort: 30082
+
+# Garante a persistência dos anexos e arquivos do GLPI
+persistence:
+  enabled: true
+  size: 10Gi
+
+# Força a aplicação GLPI a rodar no Worker 02
+nodeSelector:
+  app: webserver
+
+# Configurações do Banco de Dados Relacional
+mariadb:
+  enabled: true
+  auth:
+    rootPassword: "glpi_root_password"
+    database: "glpidb"
+    username: "glpiuser"
+    password: "glpipassword"
+  primary:
+    persistence:
+      enabled: true
+      size: 15Gi
+    # Força o banco de dados a rodar no Worker 01
+    nodeSelector:
+      app: database
